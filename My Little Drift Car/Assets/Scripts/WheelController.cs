@@ -4,60 +4,146 @@ using UnityEngine;
 
 public class WheelController : MonoBehaviour
 {
-    public WheelCollider frontRight;
-    public WheelCollider frontLeft;
-    public WheelCollider rearRight;
-    public WheelCollider rearLeft;
 
-    public Transform frontRightTransfrom;
-    public Transform frontLeftTransfrom;
-    public Transform rearRightTransfrom;
-    public Transform rearLeftTransfrom;
+    [HideInInspector] public WheelCollider frontRight;
+    [HideInInspector] public WheelCollider frontLeft;
+    [HideInInspector] public WheelCollider rearRight;
+    [HideInInspector] public WheelCollider rearLeft;
 
-    public float acceleration = 500f;
-    public float breakingForce = 300f;
-    public float maxTurnAngle = 20f;
+    [HideInInspector] public MeshRenderer frontRightTransfrom;
+    [HideInInspector] public MeshRenderer frontLeftTransfrom;
+    [HideInInspector] public MeshRenderer rearRightTransfrom;
+    [HideInInspector] public MeshRenderer rearLeftTransfrom;
 
-    public float currentAcceleration = 0f;
-    public float currentBreakingForce = 0f;
+    private ParticleSystem rearRightWheel;
+    private ParticleSystem rearLeftWheel;
+    public GameObject smoke;
+
+    public float power = 500f;
+    public float brakingForce = 300f;
+    public float slipAllowance = 0.1f;
+
+    public float gasInput;
+    public float brakeInput;
+
+    private Rigidbody carRB;
+    private bool handbrakePressed;
+    public float speed;
+
+    public float currentpower = 0f;
+    public float slipAngle;
+    public float currentbrakingForce = 0f;
     public float currentTurningAngle = 0f;
+
+    public AnimationCurve steering;
+
+    private void Start()
+    {
+        carRB = gameObject.GetComponent<Rigidbody>();
+        InstantiateSmoke();
+    }
+
+    void InstantiateSmoke()
+    {
+        rearRightWheel = Instantiate(smoke, rearRight.transform.position, Quaternion.Euler(-15f, -180f, 0f), rearLeft.transform).GetComponent<ParticleSystem>();
+        rearLeftWheel = Instantiate(smoke, rearLeft.transform.position, Quaternion.Euler(-15f,-180f,0f),rearRight.transform).GetComponent<ParticleSystem>();
+    }
 
     private void FixedUpdate()
     {
         input();
         accelerate();
-        steering();
+        applySteering();
         updateWheels();
+        checkparticles();
+    }
+
+    public void checkparticles()
+    {
+        WheelHit[] wheelHits = new WheelHit[4];
+        frontLeft.GetGroundHit(out wheelHits[0]);
+        frontRight.GetGroundHit(out wheelHits[1]);
+        rearLeft.GetGroundHit(out wheelHits[2]);
+        rearRight.GetGroundHit(out wheelHits[3]);
+
+        if (Mathf.Abs(wheelHits[2].sidewaysSlip) + Mathf.Abs(wheelHits[2].forwardSlip) > slipAllowance)
+        {
+            rearLeftWheel.Play();
+        }
+        else
+        {
+            rearLeftWheel.Stop();
+        }
+        if (Mathf.Abs(wheelHits[3].sidewaysSlip) + Mathf.Abs(wheelHits[3].forwardSlip) > slipAllowance)
+        {
+            rearRightWheel.Play();
+        }
+        else
+        {
+            rearRightWheel.Stop();
+        }
     }
 
     public void input()
     {
         if (Input.GetKey(KeyCode.Space))
         {
-            currentBreakingForce = breakingForce;
+            handbrakePressed = true;
+            brakeInput = 1;   
+            rearLeft.brakeTorque = brakingForce * 0.7f;
+            rearRight.brakeTorque = brakingForce * 0.7f;
         }
         else
-            currentBreakingForce = 0f;
+        {
+            brakeInput = 0;
+            handbrakePressed = false;
+        }
+           
+            
+        gasInput = Input.GetAxis("Vertical");
+        currentpower = power * gasInput;
+        currentTurningAngle = Input.GetAxis("Horizontal");
+        speed = carRB.velocity.magnitude;
+        if(speed < 0.01f)
+        {
+            carRB.velocity = Vector3.zero;
+        }
 
-        currentAcceleration = acceleration * Input.GetAxis("Vertical");
+        slipAngle = Vector3.Angle(transform.forward, carRB.velocity - transform.forward);
+
+        if(slipAngle < 120f)
+        {
+            if(gasInput < 0)
+            {
+                brakeInput = Mathf.Abs(gasInput);
+                gasInput = 0f;
+            }
+        }
+        else
+        {
+            if(!handbrakePressed)
+            {
+                brakeInput = 0;
+            }
+        }
     }
 
     public void accelerate()
     {
-        rearRight.motorTorque = currentAcceleration;
-        rearLeft.motorTorque = currentAcceleration;
+        rearRight.motorTorque = currentpower;
+        rearLeft.motorTorque = currentpower;
 
-        frontRight.brakeTorque = currentBreakingForce;
-        frontLeft.brakeTorque = currentBreakingForce;
-        rearRight.brakeTorque = currentBreakingForce;
-        rearLeft.brakeTorque = currentBreakingForce;
+        frontRight.brakeTorque = brakeInput * brakingForce * 0.7f;
+        frontLeft.brakeTorque = brakeInput * brakingForce * 0.7f;
+        rearRight.brakeTorque = brakeInput * brakingForce * 0.3f;
+        rearLeft.brakeTorque = brakeInput * brakingForce  *0.3f;
     }
 
-    public void steering()
+    public void applySteering()
     {
-        currentTurningAngle = maxTurnAngle * Input.GetAxis("Horizontal");
-        frontLeft.steerAngle = currentTurningAngle;
-        frontRight.steerAngle = currentTurningAngle;
+        float steeringAngle = currentTurningAngle * steering.Evaluate(speed);
+        frontLeft.steerAngle = steeringAngle;
+        frontRight.steerAngle = steeringAngle;
     }
 
     public void updateWheels()
@@ -68,12 +154,13 @@ public class WheelController : MonoBehaviour
         updatewheel(rearRight, rearRightTransfrom);
     }
 
-    public void updatewheel(WheelCollider col,Transform trans)
+    public void updatewheel(WheelCollider col,MeshRenderer trans)
     {
         Vector3 postion;
         Quaternion rotation;
         col.GetWorldPose(out postion, out rotation);
-        trans.position = postion;
-        trans.rotation = rotation;
+        trans.transform.position = postion;
+       // trans.transform.rotation = Quaternion.Euler(rotation.x,rotation.y + 180f,rotation.z);
+        trans.transform.rotation = rotation;
     }
 }
