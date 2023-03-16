@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class WheelController : MonoBehaviour
 {
@@ -15,9 +16,11 @@ public class WheelController : MonoBehaviour
     [HideInInspector] public MeshRenderer rearRightTransfrom;
     [HideInInspector] public MeshRenderer rearLeftTransfrom;
 
-    private ParticleSystem rearRightWheel;
-    private ParticleSystem rearLeftWheel;
-    public GameObject smoke;
+    [HideInInspector] public TextMeshProUGUI textbox;
+
+    [HideInInspector] private ParticleSystem rearRightWheel;
+    [HideInInspector] private ParticleSystem rearLeftWheel;
+    [HideInInspector] public GameObject smoke;
 
     public float power = 500f;
     public float brakingForce = 300f;
@@ -32,7 +35,6 @@ public class WheelController : MonoBehaviour
 
     public float currentpower = 0f;
     public float slipAngle;
-    public float currentbrakingForce = 0f;
     public float currentTurningAngle = 0f;
 
     public AnimationCurve steering;
@@ -56,6 +58,7 @@ public class WheelController : MonoBehaviour
         applySteering();
         updateWheels();
         checkparticles();
+        textbox.text = speed.ToString();
     }
 
     public void checkparticles()
@@ -90,8 +93,8 @@ public class WheelController : MonoBehaviour
         {
             handbrakePressed = true;
             brakeInput = 1;   
-            rearLeft.brakeTorque = brakingForce * 0.7f;
-            rearRight.brakeTorque = brakingForce * 0.7f;
+            rearLeft.brakeTorque = 10000f;
+            rearRight.brakeTorque = 10000f;
         }
         else
         {
