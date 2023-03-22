@@ -1491,12 +1491,84 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4903845973246108036, guid: 71d1b63a533095941a0ed6a0764488a2, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4903845973246108038, guid: 71d1b63a533095941a0ed6a0764488a2, type: 3}
       propertyPath: textbox
       value: 
       objectReference: {fileID: 793428878}
+    - target: {fileID: 4903845973246108038, guid: 71d1b63a533095941a0ed6a0764488a2, type: 3}
+      propertyPath: steering.m_Curve.Array.data[0].time
+      value: 0.09304315
+      objectReference: {fileID: 0}
+    - target: {fileID: 4903845973246108038, guid: 71d1b63a533095941a0ed6a0764488a2, type: 3}
+      propertyPath: steering.m_Curve.Array.data[0].value
+      value: 69.8358
+      objectReference: {fileID: 0}
+    - target: {fileID: 5245739462977317484, guid: 71d1b63a533095941a0ed6a0764488a2, type: 3}
+      propertyPath: m_ForwardFriction.m_Stiffness
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5245739462977317484, guid: 71d1b63a533095941a0ed6a0764488a2, type: 3}
+      propertyPath: m_SidewaysFriction.m_Stiffness
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5245739462977317484, guid: 71d1b63a533095941a0ed6a0764488a2, type: 3}
+      propertyPath: m_ForwardFriction.m_ExtremumSlip
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5245739462977317484, guid: 71d1b63a533095941a0ed6a0764488a2, type: 3}
+      propertyPath: m_ForwardFriction.m_AsymptoteValue
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 5245739463690149698, guid: 71d1b63a533095941a0ed6a0764488a2, type: 3}
+      propertyPath: m_ForwardFriction.m_ExtremumValue
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5245739463690149698, guid: 71d1b63a533095941a0ed6a0764488a2, type: 3}
+      propertyPath: m_ForwardFriction.m_AsymptoteValue
+      value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 5245739463690149698, guid: 71d1b63a533095941a0ed6a0764488a2, type: 3}
+      propertyPath: m_SidewaysFriction.m_ExtremumValue
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5245739463690149698, guid: 71d1b63a533095941a0ed6a0764488a2, type: 3}
+      propertyPath: m_SidewaysFriction.m_AsymptoteValue
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5245739463690914079, guid: 71d1b63a533095941a0ed6a0764488a2, type: 3}
+      propertyPath: m_ForwardFriction.m_ExtremumValue
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5245739463690914079, guid: 71d1b63a533095941a0ed6a0764488a2, type: 3}
+      propertyPath: m_ForwardFriction.m_AsymptoteValue
+      value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 5245739463690914079, guid: 71d1b63a533095941a0ed6a0764488a2, type: 3}
+      propertyPath: m_SidewaysFriction.m_ExtremumValue
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5245739463690914079, guid: 71d1b63a533095941a0ed6a0764488a2, type: 3}
+      propertyPath: m_SidewaysFriction.m_AsymptoteValue
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5245739464518968616, guid: 71d1b63a533095941a0ed6a0764488a2, type: 3}
+      propertyPath: m_ForwardFriction.m_Stiffness
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5245739464518968616, guid: 71d1b63a533095941a0ed6a0764488a2, type: 3}
+      propertyPath: m_SidewaysFriction.m_Stiffness
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5245739464518968616, guid: 71d1b63a533095941a0ed6a0764488a2, type: 3}
+      propertyPath: m_ForwardFriction.m_ExtremumSlip
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5245739464518968616, guid: 71d1b63a533095941a0ed6a0764488a2, type: 3}
+      propertyPath: m_ForwardFriction.m_AsymptoteValue
+      value: 0.7
+      objectReference: {fileID: 0}
     - target: {fileID: 5712294146222340926, guid: 71d1b63a533095941a0ed6a0764488a2, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -3003,7 +3075,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2664645540710082181
 Transform:
   m_ObjectHideFlags: 0

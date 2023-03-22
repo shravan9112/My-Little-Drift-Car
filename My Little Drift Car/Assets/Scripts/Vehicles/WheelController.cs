@@ -136,10 +136,10 @@ public class WheelController : MonoBehaviour
         rearRight.motorTorque = currentpower;
         rearLeft.motorTorque = currentpower;
 
-        frontRight.brakeTorque = brakeInput * brakingForce * 0.7f;
-        frontLeft.brakeTorque = brakeInput * brakingForce * 0.7f;
-        rearRight.brakeTorque = brakeInput * brakingForce * 0.3f;
-        rearLeft.brakeTorque = brakeInput * brakingForce  *0.3f;
+        frontRight.brakeTorque = brakeInput * brakingForce * 1f;
+        frontLeft.brakeTorque = brakeInput * brakingForce * 1f;
+        rearRight.brakeTorque = brakeInput * brakingForce * 0.7f;
+        rearLeft.brakeTorque = brakeInput * brakingForce  *0.7f;
     }
 
     public void applySteering()
