@@ -4,14 +4,13 @@ using UnityEngine;
 
 namespace Physics.Wheel
 {
-	[RequireComponent(typeof(WheelCollider))]
+    [RequireComponent(typeof(WheelCollider))]
 
-	public class CarWheelCollider : MonoBehaviour
-	{
-		[SerializeField, FullField] WheelColliderConfig WheelConfig;
-
-		[SerializeField] WheelCollider wheelCollider;
-		[SerializeField]  Rigidbody rB;
+    public class CarWheelCollider : MonoBehaviour
+    {
+        [SerializeField,FullField] WheelColliderConfig WheelConfig;
+        [SerializeField, HideInInspector] WheelCollider wheelCollider;
+        [SerializeField, HideInInspector] Rigidbody rB;
 
 		public WheelCollider WheelCollider
 		{
@@ -131,10 +130,16 @@ namespace Physics.Wheel
 		const float minDamper = 0;
 		const float maxDamper = 10000;
 
+		const float minExtremumSlip = 0.4f;
+		const float minExtremumValue = 0.7f;
+		const float minAsymptoteSlip = 0.6f;
+		const float minAsymptoteValue = 0.65f;
+
 		const float maxExtremumSlip = 0.4f;
 		const float maxExtremumValue = 4.5f;
 		const float maxAsymptoteSlip = 0.6f;
 		const float maxAsymptoteValue = 4f;
+
 	}
 
 	[System.Serializable]
@@ -150,15 +155,16 @@ namespace Physics.Wheel
 		public float ForceAppPointDistance;
 		public Vector3 Center;
 
+		//Suspension spring
 		public float Spring;
 		public float Damper;
 		public float TargetPoint;
 
+		//Frictions;
 		public float ForwardFriction;
 		public float SidewaysFriction;
 	}
 
 	[System.AttributeUsage(System.AttributeTargets.Field)]
 	public class FullField : PropertyAttribute { }
-
 }

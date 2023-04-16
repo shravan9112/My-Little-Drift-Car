@@ -6,69 +6,69 @@ using Physics.Wheel;
 [System.Serializable]
 public struct Wheel
 {
-    public WheelCollider WheelCollider;
-    public Transform WheelView;
-    public float SlipForGenerateParticle;
+	public WheelCollider WheelCollider;
+	public Transform WheelView;
+	//public float SlipForGenerateParticle;
 
-    public float CurrentMaxSlip { get { return Mathf.Max(CurrentForwardSlip, CurrentSidewaysSlip); } }
-    public float CurrentForwardSlip { get; private set; }
-    public float CurrentSidewaysSlip { get; private set; }
-    public WheelHit GetHit { get { return Hit; } }
+	public float CurrentMaxSlip { get { return Mathf.Max(CurrentForwardSleep, CurrentSidewaysSleep); } }
+	public float CurrentForwardSleep { get; private set; }
+	public float CurrentSidewaysSleep { get; private set; }
+	public WheelHit GetHit { get { return Hit; } }
 
-    WheelHit Hit;
+	WheelHit Hit;
 
-    CarWheelCollider WC;
+	CarWheelCollider WC;
+	public CarWheelCollider CarWheelCollider
+	{
+		get
+		{
+			if (WC == null)
+			{
+				WC = WheelCollider.GetComponent<CarWheelCollider>();
+			}
+			if (WC == null)
+			{
+				WC = WheelCollider.gameObject.AddComponent<CarWheelCollider>();
+				WC.CheckFirstEnable();
+			}
+			return WC;
+		}
+	}
 
-    public CarWheelCollider CarWheelCollider
-    {
-        get
-        {
-            if (WC == null)
-            {
-                WC = WheelCollider.GetComponent<CarWheelCollider>();
-            }
-            if (WC == null)
-            {
-                WC = WheelCollider.gameObject.AddComponent<CarWheelCollider>();
-                WC.CheckFirstEnable();
-            }
-            return WC;
-        }
-    }
+	Vector3 HitPoint;
 
-    Vector3 HitPoint;
+	const int SmoothValuesCount = 3;
 
-    const int SmoothValuesCount = 3;
+	public void FixedUpdate()
+	{
 
-    public void FixedUpdate()
-    {
+		if (WheelCollider.GetGroundHit(out Hit))
+		{
+			var prevForwar = CurrentForwardSleep;
+			var prevSide = CurrentSidewaysSleep;
 
-        if (WheelCollider.GetGroundHit(out Hit))
-        {
-            var prevForwar = CurrentForwardSleep;
-            var prevSide = CurrentSidewaysSleep;
+			CurrentForwardSleep = (prevForwar + Mathf.Abs(Hit.forwardSlip)) / 2;
+			CurrentSidewaysSleep = (prevSide + Mathf.Abs(Hit.sidewaysSlip)) / 2;
+		}
+		else
+		{
+			CurrentForwardSleep = 0;
+			CurrentSidewaysSleep = 0;
+		}
+	}
 
-            CurrentForwardSleep = (prevForwar + Mathf.Abs(Hit.forwardSlip)) / 2;
-            CurrentSidewaysSleep = (prevSide + Mathf.Abs(Hit.sidewaysSlip)) / 2;
-        }
-        else
-        {
-            CurrentForwardSleep = 0;
-            CurrentSidewaysSleep = 0;
-        }
-    }
+	public void UpdateTransform()
+	{
+		Vector3 pos;
+		Quaternion quat;
+		WheelCollider.GetWorldPose(out pos, out quat);
+		WheelView.position = pos;
+		WheelView.rotation = quat;
+	}
 
-    public void UpdateTransform()
-    {
-        Vector3 pos;
-        Quaternion quat;
-        WheelCollider.GetWorldPose(out pos, out quat);
-        WheelView.position = pos;
-        WheelView.rotation = quat;
-    }
+	public void UpdateFrictionConfig(WheelColliderConfig config)
+	{
+		CarWheelCollider.UpdateConfig(config);
+	}
 
-    public void UpdateFrictionConfig(WheelColliderConfig config)
-    {
-        CarWheelCollider.UpdateConfig(config);
-    }
 }
