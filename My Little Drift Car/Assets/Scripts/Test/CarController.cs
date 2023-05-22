@@ -15,6 +15,11 @@ public class CarController : MonoBehaviour
 
 	public TextMeshProUGUI gearText;
 	public TextMeshProUGUI speedText;
+	public TextMeshProUGUI rpmText;
+	float prevRatio = 0;
+	float newRatio = 0;
+
+	public float speed;
 
 	[SerializeField] CarConfig CarConfig;
 
@@ -138,9 +143,23 @@ public class CarController : MonoBehaviour
 		{
 			Wheels[i].UpdateTransform();
 		}
-		Debug.Log(CurrentGear);
 		gearText.text = CurrentGear.ToString();
-		speedText.text = CurrentSpeed.ToString();
+		if (CurrentSpeed > 0.1)
+		{
+			speed = CurrentSpeed;
+		}
+		else
+			speed = 0;
+		speedText.text = speed.ToString();
+		rpmText.text = EngineRPM.ToString();
+		if (Input.GetKeyDown(KeyCode.E))
+        {
+			Shiftup();
+        }
+		if (Input.GetKeyDown(KeyCode.Q))
+		{
+			ShiftDown();
+		}
 		//Debug.Log(EngineRPM);
 	}
 
@@ -189,10 +208,79 @@ public class CarController : MonoBehaviour
 	public float GetInCutOffRPM { get { return CutOffRPM - CutOffOffsetRPM; } }
 
 	float CutOffTimer;
-	bool InCutOff;
+	public bool InCutOff;
 
 	void UpdateRpmAndTorqueLogic()
 	{
+		//Automatic gearbox logic. 
+		if (AutomaticGearBox)
+		{
+
+			bool forwardIsSlip = false;
+			for (int i = FirstDriveWheel; i <= LastDriveWheel; i++)
+			{
+				if (Wheels[i].CurrentForwardSleep > MaxForwardSlipToBlockChangeGear)
+				{
+					forwardIsSlip = true;
+					break;
+				}
+			}
+
+			float prevRatio = 0;
+			float newRatio = 0;
+
+			if (!forwardIsSlip && EngineRPM > RpmToNextGear && CurrentGear >= 0 && CurrentGear < (AllGearsRatio.Length - 2))
+			{
+				prevRatio = AllGearsRatio[CurrentGearIndex];
+				CurrentGear++;
+				newRatio = AllGearsRatio[CurrentGearIndex];
+			}
+			else if (EngineRPM < RpmToPrevGear && CurrentGear > 0 && (EngineRPM <= MinRPM || CurrentGear != 1))
+			{
+				prevRatio = AllGearsRatio[CurrentGearIndex];
+				CurrentGear--;
+				newRatio = AllGearsRatio[CurrentGearIndex];
+			}
+
+			if (!Mathf.Approximately(prevRatio, 0) && !Mathf.Approximately(newRatio, 0))
+			{
+				EngineRPM = Mathf.Lerp(EngineRPM, EngineRPM * (newRatio / prevRatio), RpmEngineToRpmWheelsLerpSpeed * Time.fixedDeltaTime); //EngineRPM * (prevRatio / newRatio);// 
+			}
+
+			if (CarDirection <= 0 && CurrentAcceleration < 0)
+			{
+				CurrentGear = -1;
+			}
+			else if (CurrentGear <= 0 && CarDirection >= 0 && CurrentAcceleration > 0)
+			{
+				CurrentGear = 1;
+			}
+			else if (CarDirection == 0 && CurrentAcceleration == 0)
+			{
+				CurrentGear = 0;
+			}
+		}
+		else
+		{
+			if (!Mathf.Approximately(prevRatio, 0) && !Mathf.Approximately(newRatio, 0))
+			{
+				EngineRPM = Mathf.Lerp(EngineRPM, EngineRPM * (newRatio / prevRatio), RpmEngineToRpmWheelsLerpSpeed * Time.fixedDeltaTime); //EngineRPM * (prevRatio / newRatio);// 
+			}
+
+			if (CarDirection <= 0 && CurrentAcceleration < 0)
+			{
+				CurrentGear = -1;
+			}
+			else if (CurrentGear <= 0 && CarDirection >= 0 && CurrentAcceleration > 0)
+			{
+				CurrentGear = 1;
+			}
+			else if (CarDirection == 0 && CurrentAcceleration == 0)
+			{
+				CurrentGear = 0;
+			}
+		}
+		//TODO manual gearbox logic.
 
 		if (InCutOff)
 		{
@@ -286,56 +374,35 @@ public class CarController : MonoBehaviour
 			}
 		}
 
-		//Automatic gearbox logic. 
-		if (AutomaticGearBox)
-		{
+		
+	}
 
-			bool forwardIsSlip = false;
-			for (int i = FirstDriveWheel; i <= LastDriveWheel; i++)
-			{
-				if (Wheels[i].CurrentForwardSleep > MaxForwardSlipToBlockChangeGear)
-				{
-					forwardIsSlip = true;
-					break;
-				}
-			}
-
-			float prevRatio = 0;
-			float newRatio = 0;
-
-			if (!forwardIsSlip && EngineRPM > RpmToNextGear && CurrentGear >= 0 && CurrentGear < (AllGearsRatio.Length - 2))
-			{
+	void Shiftup()
+    {
+		if(!AutomaticGearBox)
+        {
+			if(CurrentGear < 5)
+            {
+				Debug.Log("E Pressed");
 				prevRatio = AllGearsRatio[CurrentGearIndex];
 				CurrentGear++;
 				newRatio = AllGearsRatio[CurrentGearIndex];
 			}
-			else if (EngineRPM < RpmToPrevGear && CurrentGear > 0 && (EngineRPM <= MinRPM || CurrentGear != 1))
-			{
+		}	
+	}
+
+	void ShiftDown()
+    {
+		if (!AutomaticGearBox)
+        {
+			if(CurrentGear > -1)
+            {
+				Debug.Log("Q Pressed");
 				prevRatio = AllGearsRatio[CurrentGearIndex];
 				CurrentGear--;
 				newRatio = AllGearsRatio[CurrentGearIndex];
 			}
-
-			if (!Mathf.Approximately(prevRatio, 0) && !Mathf.Approximately(newRatio, 0))
-			{
-				EngineRPM = Mathf.Lerp(EngineRPM, EngineRPM * (newRatio / prevRatio), RpmEngineToRpmWheelsLerpSpeed * Time.fixedDeltaTime); //EngineRPM * (prevRatio / newRatio);// 
-			}
-
-			if (CarDirection <= 0 && CurrentAcceleration < 0)
-			{
-				CurrentGear = -1;
-			}
-			else if (CurrentGear <= 0 && CarDirection >= 0 && CurrentAcceleration > 0)
-			{
-				CurrentGear = 1;
-			}
-			else if (CarDirection == 0 && CurrentAcceleration == 0)
-			{
-				CurrentGear = 0;
-			}
 		}
-
-		//TODO manual gearbox logic.
 	}
 
 	void UpdateSteerAngleLogic()
