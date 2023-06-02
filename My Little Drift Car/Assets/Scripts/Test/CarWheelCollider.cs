@@ -9,8 +9,8 @@ namespace Physics.Wheel
     public class CarWheelCollider : MonoBehaviour
     {
         [SerializeField,FullField] WheelColliderConfig WheelConfig;
-        [SerializeField, HideInInspector] WheelCollider wheelCollider;
-        [SerializeField, HideInInspector] Rigidbody rB;
+        [SerializeField] WheelCollider wheelCollider;
+        [SerializeField] Rigidbody rB;
 
 		public WheelCollider WheelCollider
 		{

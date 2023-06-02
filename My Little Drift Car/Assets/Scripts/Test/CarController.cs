@@ -28,7 +28,13 @@ public class CarController : MonoBehaviour
 	float MaxMotorTorque;
 	float MaxSteerAngle { get { return CarConfig.MaxSteerAngle; } }
 	//DriveType DriveType { get { return CarConfig.DriveType; } }
-	bool AutomaticGearBox { get { return CarConfig.AutomaticGearBox; } }
+	private bool _automaticGearBox;
+
+	bool AutomaticGearBox
+	{
+		get { return _automaticGearBox; }
+		set { _automaticGearBox = value; }
+	}
 	AnimationCurve MotorTorqueFromRpmCurve { get { return CarConfig.MotorTorqueFromRpmCurve; } }
 	float MaxRPM { get { return CarConfig.MaxRPM; } }
 	float MinRPM { get { return CarConfig.MinRPM; } }
@@ -153,14 +159,11 @@ public class CarController : MonoBehaviour
 		speedText.text = speed.ToString();
 		rpmText.text = EngineRPM.ToString();
 		if (Input.GetKeyDown(KeyCode.E))
-        {
 			Shiftup();
-        }
 		if (Input.GetKeyDown(KeyCode.Q))
-		{
 			ShiftDown();
-		}
-		//Debug.Log(EngineRPM);
+		if(Input.GetKeyDown(KeyCode.P))
+			AutomaticGearBox = !AutomaticGearBox;
 	}
 
 	private void FixedUpdate()
@@ -169,7 +172,11 @@ public class CarController : MonoBehaviour
 		CurrentSpeed = RB.velocity.magnitude;
 
 		UpdateSteerAngleLogic();
-		UpdateRpmAndTorqueLogic();
+		if (AutomaticGearBox)
+			UpdateRpmAndTorqueLogic();
+		else
+			ManualShift();
+
 
 		//Find max slip and update braking ground logic.
 		CurrentMaxSlip = Wheels[0].CurrentMaxSlip;
@@ -260,27 +267,6 @@ public class CarController : MonoBehaviour
 				CurrentGear = 0;
 			}
 		}
-		else
-		{
-			if (!Mathf.Approximately(prevRatio, 0) && !Mathf.Approximately(newRatio, 0))
-			{
-				EngineRPM = Mathf.Lerp(EngineRPM, EngineRPM * (newRatio / prevRatio), RpmEngineToRpmWheelsLerpSpeed * Time.fixedDeltaTime); //EngineRPM * (prevRatio / newRatio);// 
-			}
-
-			if (CarDirection <= 0 && CurrentAcceleration < 0)
-			{
-				CurrentGear = -1;
-			}
-			else if (CurrentGear <= 0 && CarDirection >= 0 && CurrentAcceleration > 0)
-			{
-				CurrentGear = 1;
-			}
-			else if (CarDirection == 0 && CurrentAcceleration == 0)
-			{
-				CurrentGear = 0;
-			}
-		}
-		//TODO manual gearbox logic.
 
 		if (InCutOff)
 		{
@@ -351,7 +337,7 @@ public class CarController : MonoBehaviour
 				{
 					if (Wheels[i].WheelCollider.rpm <= maxWheelRPM)
 					{
-						Wheels[i].WheelCollider.motorTorque = motorTorque;
+							Wheels[i].WheelCollider.motorTorque = motorTorque;
 					}
 					else
 					{
@@ -375,6 +361,87 @@ public class CarController : MonoBehaviour
 		}
 
 		
+	}
+
+	void ManualShift()
+    {
+		if (EngineRPM >= CutOffRPM)
+		{
+			InCutOff = true;
+		}
+		if(InCutOff)
+        {
+			if (EngineRPM <= CutOffRPM)
+				InCutOff = false;
+		}
+
+		float prevRatio = 0;
+		float newRatio = 0;
+		if (!Mathf.Approximately(prevRatio, 0) && !Mathf.Approximately(newRatio, 0))
+		{
+			EngineRPM = Mathf.Lerp(EngineRPM, EngineRPM * (newRatio / prevRatio), RpmEngineToRpmWheelsLerpSpeed * Time.fixedDeltaTime); //EngineRPM * (prevRatio / newRatio);// 
+		}
+
+		float rpm = CurrentAcceleration > 0 ? MaxRPM : MinRPM;
+		float speed = CurrentAcceleration > 0 ? RpmEngineToRpmWheelsLerpSpeed : RpmEngineToRpmWheelsLerpSpeed * 0.2f;
+		EngineRPM = Mathf.Lerp(EngineRPM, rpm, speed * Time.fixedDeltaTime);
+		float minRPM = 0;
+		for (int i = FirstDriveWheel + 1; i <= LastDriveWheel; i++)
+		{
+			minRPM += Wheels[i].WheelCollider.rpm;
+		}
+
+		minRPM /= LastDriveWheel - FirstDriveWheel + 1;
+
+		if(!InCutOff)
+        {
+			float targetRPM = Mathf.Abs((minRPM + 20) * AllGearsRatio[CurrentGearIndex]);              //+20 for normal work CutOffRPM
+			targetRPM = Mathf.Clamp(targetRPM, MinRPM, MaxRPM);
+			EngineRPM = Mathf.Lerp(EngineRPM, targetRPM, RpmEngineToRpmWheelsLerpSpeed * Time.fixedDeltaTime);
+		}
+		
+		if (!Mathf.Approximately(CurrentAcceleration, 0))
+		{
+			//If the direction of the car is the same as Current Acceleration.
+			if (CarDirection * CurrentAcceleration >= 0)
+			{
+				CurrentBrake = 0;
+
+				float motorTorqueFromRpm = MotorTorqueFromRpmCurve.Evaluate(EngineRPM * 0.001f);
+				var motorTorque = CurrentAcceleration * (motorTorqueFromRpm * (MaxMotorTorque * AllGearsRatio[CurrentGearIndex]));
+				if (Mathf.Abs(minRPM) * AllGearsRatio[CurrentGearIndex] > MaxRPM)
+				{
+					motorTorque = 0;
+				}
+
+				//If the rpm of the wheel is less than the max rpm engine * current ratio, then apply the current torque for wheel, else not torque for wheel.
+				float maxWheelRPM = AllGearsRatio[CurrentGearIndex] * EngineRPM;
+				for (int i = FirstDriveWheel; i <= LastDriveWheel; i++)
+				{
+					if (Wheels[i].WheelCollider.rpm <= maxWheelRPM)
+					{
+							Wheels[i].WheelCollider.motorTorque = motorTorque;
+					}
+					else
+					{
+						Wheels[i].WheelCollider.motorTorque = 0;
+					}
+				}
+			}
+			else
+			{
+				CurrentBrake = MaxBrakeTorque;
+			}
+		}
+		else
+		{
+			CurrentBrake = 0;
+
+			for (int i = FirstDriveWheel; i <= LastDriveWheel; i++)
+			{
+				Wheels[i].WheelCollider.motorTorque = 0;
+			}
+		}
 	}
 
 	void Shiftup()
