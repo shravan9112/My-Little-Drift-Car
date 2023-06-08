@@ -27,7 +27,7 @@ public class MenuChange : MonoBehaviour
 
     public void changescene()
     {
-        SceneManager.LoadScene("Test_Level_1");
+        SceneManager.LoadScene("s1");
     }
 
     public void exit()
