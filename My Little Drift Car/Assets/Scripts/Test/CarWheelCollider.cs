@@ -12,7 +12,22 @@ namespace Physics.Wheel
         [SerializeField] WheelCollider wheelCollider;
         [SerializeField] Rigidbody rB;
 
-		public WheelCollider WheelCollider
+        public void Update()
+        {
+			WheelHit hit = new WheelHit();
+
+			WheelCollider yourWheelcollider = GetComponent<WheelCollider>();
+
+			if (yourWheelcollider.GetGroundHit(out hit))
+			{
+				if (hit.sidewaysSlip > .15)
+					Debug.Log("drifting " + this.name);
+				if(hit.forwardSlip > .55)
+					Debug.Log("Traction Lost on " + this.name);
+			}
+		}
+
+        public WheelCollider WheelCollider
 		{
 			get
 			{

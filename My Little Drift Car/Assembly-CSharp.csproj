@@ -59,7 +59,6 @@
     <Compile Include="Assets\Scripts\UI\MenuChange.cs" />
     <Compile Include="Assets\Photon\PhotonRealtime\Demos\DemoLoadBalancing\ConnectAndJoinRandomLb.cs" />
     <Compile Include="Assets\Photon\PhotonLibs\WebSocket\SocketWebTcp.cs" />
-    <Compile Include="Assets\Scripts\Test\BodyTilt.cs" />
     <Compile Include="Assets\Scripts\Gamemanager.cs" />
     <Compile Include="Assets\Scripts\Vehicles\WheelController.cs" />
     <Compile Include="Assets\Scripts\Test\UserInput.cs" />
@@ -67,7 +66,6 @@
     <Compile Include="Assets\Photon\PhotonLibs\WebSocket\WebSocket.cs" />
     <Compile Include="Assets\Scripts\Test\CarController.cs" />
     <Compile Include="Assets\Scripts\Test\AntiRoll.cs" />
-    <Compile Include="Assets\Scripts\Test\WheelColliderEditor.cs" />
     <Compile Include="Assets\Scripts\Test\CarWheelCollider.cs" />
     <Compile Include="Assets\Scripts\UI\LookAt.cs" />
     <Compile Include="Assets\Scripts\CreateAndJoinRoom.cs" />
