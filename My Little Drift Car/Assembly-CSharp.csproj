@@ -59,6 +59,7 @@
     <Compile Include="Assets\Scripts\UI\MenuChange.cs" />
     <Compile Include="Assets\Photon\PhotonRealtime\Demos\DemoLoadBalancing\ConnectAndJoinRandomLb.cs" />
     <Compile Include="Assets\Photon\PhotonLibs\WebSocket\SocketWebTcp.cs" />
+    <Compile Include="Assets\Scripts\Speedometer.cs" />
     <Compile Include="Assets\Scripts\Gamemanager.cs" />
     <Compile Include="Assets\Scripts\Vehicles\WheelController.cs" />
     <Compile Include="Assets\Scripts\Test\UserInput.cs" />

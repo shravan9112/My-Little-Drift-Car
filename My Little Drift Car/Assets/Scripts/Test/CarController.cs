@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -14,10 +15,16 @@ public class CarController : MonoBehaviour
 	[SerializeField] Transform COM;
 
 	public TextMeshProUGUI gearText;
+	private Transform needleTransform;
+	private Transform rpmTransform;
 	public TextMeshProUGUI speedText;
 	public TextMeshProUGUI rpmText;
+	public Slider slider;
 	float prevRatio = 0;
 	float newRatio = 0;
+	private float maxSpeedAngle = -20;
+	private float zeroSpeedAngle = 210;
+	private float speedMax,rpmMax;
 
 	public float speed;
 	public bool AWD;
@@ -95,6 +102,7 @@ public class CarController : MonoBehaviour
 	public int CarDirection { get { return CurrentSpeed < 1 ? 0 : (VelocityAngle < 90 && VelocityAngle > -90 ? 1 : -1); } }
 
 	float CurrentSteerAngle;
+	float horizontalinput;
 	float CurrentAcceleration;
 	float CurrentBrake;
 	bool InHandBrake;
@@ -107,6 +115,11 @@ public class CarController : MonoBehaviour
 	private void Awake()
 	{
 		RB.centerOfMass = COM.localPosition;
+
+		needleTransform = GameObject.Find("Needle").transform;
+		rpmTransform = GameObject.Find("RpmNeedle").transform;
+		speedMax = 100f;
+		rpmMax = 7000f;
 
 		Wheels = new Wheel[4] {
 			FrontLeftWheel,
@@ -140,6 +153,7 @@ public class CarController : MonoBehaviour
 	public void UpdateControls(float horizontal, float vertical, bool handBrake)
 	{
 		float targetSteerAngle = horizontal * MaxSteerAngle;
+		horizontalinput = horizontal;
 
 		if (EnableSteerAngleMultiplier)
 		{
@@ -170,14 +184,17 @@ public class CarController : MonoBehaviour
 			Wheels[i].UpdateTransform();
 		}
 		gearText.text = CurrentGear.ToString();
+		needleTransform.eulerAngles = new Vector3(0, 0, GetSpeedRotation());
+		rpmTransform.eulerAngles = new Vector3(0, 0, GetRpmRotation());
+		slider.value = horizontalinput;
 		if (CurrentSpeed > 0.1)
 		{
 			speed = CurrentSpeed;
 		}
 		else
 			speed = 0;
-		speedText.text = speed.ToString();
-		rpmText.text = EngineRPM.ToString();
+		speedText.text = speed.ToString("F2");
+		rpmText.text = EngineRPM.ToString("F2");
 		if (Input.GetKeyDown(KeyCode.E))
 			Shiftup();
 		if (Input.GetKeyDown(KeyCode.Q))
@@ -470,7 +487,6 @@ public class CarController : MonoBehaviour
         {
 			if(CurrentGear < 5)
             {
-				Debug.Log("E Pressed");
 				prevRatio = AllGearsRatio[CurrentGearIndex];
 				CurrentGear++;
 				newRatio = AllGearsRatio[CurrentGearIndex];
@@ -482,9 +498,8 @@ public class CarController : MonoBehaviour
     {
 		if (!AutomaticGearBox)
         {
-			if(CurrentGear > -1)
+			if(CurrentGear > 0)
             {
-				Debug.Log("Q Pressed");
 				prevRatio = AllGearsRatio[CurrentGearIndex];
 				CurrentGear--;
 				newRatio = AllGearsRatio[CurrentGearIndex];
@@ -540,6 +555,20 @@ public class CarController : MonoBehaviour
             RB.angularVelocity = currAngle;
         }
     }
+
+	private float GetSpeedRotation()
+	{
+		float totalAngleSize = zeroSpeedAngle - maxSpeedAngle;
+		float speedNormalized = speed / speedMax;
+		return zeroSpeedAngle - speedNormalized * totalAngleSize;
+	}
+
+	private float GetRpmRotation()
+	{
+		float totalAngleSize = zeroSpeedAngle - maxSpeedAngle;
+		float rpmNormalized = EngineRPM / rpmMax;
+		return zeroSpeedAngle - rpmNormalized * totalAngleSize;
+	}
 }
 
 

@@ -12,6 +12,39 @@ namespace Physics.Wheel
         [SerializeField] WheelCollider wheelCollider;
         [SerializeField] Rigidbody rB;
 
+		public struct WheelColliderConfig
+		{
+			[SerializeField] bool IsFoldout;
+			public bool IsFullConfig;
+
+			public float Mass;
+			public float Radius;
+			public float WheelDampingRate;
+			public float SuspensionDistance;
+			public float ForceAppPointDistance;
+			public Vector3 Center;
+
+			//Suspension spring
+			public float Spring;
+			public float Damper;
+			public float TargetPoint;
+
+			//Frictions;
+			public float ForwardFriction;
+			public float SidewaysFriction;
+		}
+
+		public void Start()
+		{
+			WheelConfig.Mass = wheelCollider.mass;
+			WheelConfig.Radius = wheelCollider.radius;
+			WheelConfig.WheelDampingRate = wheelCollider.wheelDampingRate;
+			WheelConfig.SuspensionDistance = wheelCollider.suspensionDistance;
+			WheelConfig.ForceAppPointDistance = wheelCollider.forceAppPointDistance;
+			WheelConfig.Center = wheelCollider.center;
+			WheelConfig.Damper = wheelCollider.wheelDampingRate;
+		}
+
         public void Update()
         {
 			WheelHit hit = new WheelHit();
@@ -20,10 +53,10 @@ namespace Physics.Wheel
 
 			if (yourWheelcollider.GetGroundHit(out hit))
 			{
-				if (hit.sidewaysSlip > .15)
-					Debug.Log("drifting " + this.name);
-				if(hit.forwardSlip > .55)
-					Debug.Log("Traction Lost on " + this.name);
+				//if (hit.sidewaysSlip > .15)
+				//	Debug.Log("drifting " + this.name);
+				//if(hit.forwardSlip > .55)
+				//	Debug.Log("Traction Lost on " + this.name);
 			}
 		}
 
@@ -158,27 +191,7 @@ namespace Physics.Wheel
 	}
 
 	[System.Serializable]
-	public struct WheelColliderConfig
-	{
-		[SerializeField] bool IsFoldout;
-		public bool IsFullConfig;
-
-		public float Mass;
-		public float Radius;
-		public float WheelDampingRate;
-		public float SuspensionDistance;
-		public float ForceAppPointDistance;
-		public Vector3 Center;
-
-		//Suspension spring
-		public float Spring;
-		public float Damper;
-		public float TargetPoint;
-
-		//Frictions;
-		public float ForwardFriction;
-		public float SidewaysFriction;
-	}
+	
 
 	[System.AttributeUsage(System.AttributeTargets.Field)]
 	public class FullField : PropertyAttribute { }
