@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using TMPro;
 
 public class Gamemanager : MonoBehaviour
 {
@@ -10,17 +11,27 @@ public class Gamemanager : MonoBehaviour
     public GameObject[] cars,showcars;
     public float time;
     public Vector3 pos = new Vector3(330.2f,21.48f,65f);
-    public bool photon;
+    public bool photon,exit;
+    public TMP_Text timeText;
 
+    public void escape()
+    {
+        ui.SetActive(true);
+        exit = false;
+    }
     private void Awake()
     {
-        time = 0; 
+        time = 0;
+        //timeText = GetComponent<TextMeshProUGUI>();
     }
 
     private void Update()
     {
         check();
         time = time + Time.deltaTime;
+        timeText.text = time.ToString("F1");
+        if (exit == true)
+            escape();
     }
 
     public void check()

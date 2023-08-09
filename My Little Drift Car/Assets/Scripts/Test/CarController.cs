@@ -107,6 +107,10 @@ public class CarController : MonoBehaviour
 	float CurrentBrake;
 	bool InHandBrake;
 
+	public GameObject Manager;
+	public Gamemanager gamemanager1;
+	public bool exit;
+
 	int FirstDriveWheel;
 	int LastDriveWheel;
 
@@ -150,7 +154,11 @@ public class CarController : MonoBehaviour
 		}
 	}
 
-	public void UpdateControls(float horizontal, float vertical, bool handBrake)
+    private void Start()
+    {
+		Manager = GameObject.Find("GameManager");
+	}
+    public void UpdateControls(float horizontal, float vertical, bool handBrake)
 	{
 		float targetSteerAngle = horizontal * MaxSteerAngle;
 		horizontalinput = horizontal;
@@ -168,6 +176,15 @@ public class CarController : MonoBehaviour
 
 	private void Update()
 	{
+		if (Input.GetKeyDown(KeyCode.Escape))
+        {
+			exit = true;
+			Manager.GetComponent<Gamemanager>().exit = exit;
+			exit = false;
+			Destroy(gameObject);
+		}
+			
+
 		if (AWD)
 		{
 			FirstDriveWheel = 0;
