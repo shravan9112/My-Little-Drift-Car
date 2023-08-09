@@ -212,6 +212,9 @@ public class CarController : MonoBehaviour
 			speed = 0;
 		speedText.text = speed.ToString("F2");
 		rpmText.text = EngineRPM.ToString("F2");
+		if (Manager.GetComponent<Gamemanager>().maxspeed < speed)
+			Manager.GetComponent<Gamemanager>().maxspeed = speed;
+
 		if (Input.GetKeyDown(KeyCode.E))
 			Shiftup();
 		if (Input.GetKeyDown(KeyCode.Q))

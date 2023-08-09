@@ -7,11 +7,11 @@ using TMPro;
 public class Gamemanager : MonoBehaviour
 {
     private int selector,final;
-    public GameObject first,second,ui,hints;
+    public GameObject first,second,ui,hints,panel,credits;
     public GameObject[] cars,showcars;
-    public float time;
+    public float time,maxspeed;
     public Vector3 pos = new Vector3(330.2f,21.48f,65f);
-    public bool photon,exit;
+    public bool photon,exit,runtimer;
     public TMP_Text timeText;
 
     public void escape()
@@ -21,17 +21,44 @@ public class Gamemanager : MonoBehaviour
     }
     private void Awake()
     {
+        maxspeed = 0;
         time = 0;
-        //timeText = GetComponent<TextMeshProUGUI>();
+        runtimer = true;
     }
 
     private void Update()
     {
         check();
-        time = time + Time.deltaTime;
-        timeText.text = time.ToString("F1");
+        if(runtimer == true)
+        {
+            time = time + Time.deltaTime;
+            timeText.text = time.ToString("F1");
+        } 
         if (exit == true)
             escape();
+    }
+
+    public void quit()
+    {
+        runtimer = false;
+        first.SetActive(false);
+        panel.SetActive(false);
+        credits.SetActive(true);
+    }
+
+    public void backtomenu()
+    {
+        runtimer = true;
+        credits.SetActive(false);
+        first.SetActive(true);
+        panel.SetActive(true);
+    }
+
+    public void website()
+    {
+        Application.OpenURL("https://docs.google.com/forms/d/e/1FAIpQLSee5BTWim4k7lpEi8UCGTpTi23AWJm-_qfS3igZkt_jrotCXA/viewform?usp=sf_link");
+        Debug.Log("Survey clicked");
+        Application.Quit();
     }
 
     public void check()
