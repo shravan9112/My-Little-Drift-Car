@@ -335,7 +335,6 @@ GameObject:
   - component: {fileID: 2044349740368674923}
   - component: {fileID: 2005302762597787917}
   - component: {fileID: 1663286135425997520}
-  - component: {fileID: 1663286135425997523}
   - component: {fileID: 5987773212214524456}
   - component: {fileID: 5987773212214524455}
   - component: {fileID: 7022252491536942855}
@@ -398,68 +397,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &1663286135425997523
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1663286135425997521}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c14aca99a77404a4caa8b126d542ce41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  frontRight: {fileID: 2005302761569423673}
-  frontLeft: {fileID: 2005302762326253181}
-  rearRight: {fileID: 2005302762551505482}
-  rearLeft: {fileID: 2005302762535494679}
-  frontRightTransfrom: {fileID: 4023270951474736519}
-  frontLeftTransfrom: {fileID: 8961076577115393339}
-  rearRightTransfrom: {fileID: 2450464817430767361}
-  rearLeftTransfrom: {fileID: 5902429263921859485}
-  speedText: {fileID: 0}
-  gearText: {fileID: 0}
-  smoke: {fileID: 6147903259295162071, guid: 1c6029daa8a350542bef59bd8529ea6f, type: 3}
-  power: 400
-  brakingForce: 300
-  slipAllowance: 0.5
-  currentGear: 0
-  gasInput: 0
-  brakeInput: 0
-  handbrakePressed: 0
-  accelerating: 0
-  braking: 0
-  coasting: 0
-  reversing: 0
-  speed: 0
-  currentpower: 0
-  slipAngle: 0
-  turnInput: 0
-  steering:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0.09304315
-      value: 69.8358
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 15.376907
-      value: 16.99016
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
 --- !u!114 &5987773212214524456
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -490,7 +427,7 @@ MonoBehaviour:
   rpmText: {fileID: 1284879378703436678}
   slider: {fileID: 8130172659991291757}
   speed: 0
-  AWD: 1
+  AWD: 0
   CarConfig:
     MaxSteerAngle: 45
     AutomaticGearBox: 1
@@ -577,6 +514,9 @@ MonoBehaviour:
     MaxAngularVelocityHelpAngle: 90
     AngularVelucityInMaxAngle: 0.5
     AngularVelucityInMinAngle: 2
+  Manager: {fileID: 0}
+  gamemanager1: {fileID: 0}
+  exit: 0
   InCutOff: 0
 --- !u!114 &5987773212214524455
 MonoBehaviour:

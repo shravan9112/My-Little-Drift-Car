@@ -229,8 +229,10 @@ public class CarController : MonoBehaviour
 		CurrentSpeed = RB.velocity.magnitude;
 
 		UpdateSteerAngleLogic();
-		if (AutomaticGearBox) { }
-		//UpdateRpmAndTorqueLogic();
+		if (AutomaticGearBox)
+		{
+			UpdateRpmAndTorqueLogic();
+		}
 		else
 			ManualShift();
 
@@ -274,153 +276,153 @@ public class CarController : MonoBehaviour
 	float CutOffTimer;
 	public bool InCutOff;
 
-	//void UpdateRpmAndTorqueLogic()
-	//{
-	//	//Automatic gearbox logic. 
-	//	if (AutomaticGearBox)
-	//	{
+    void UpdateRpmAndTorqueLogic()
+    {
+        //Automatic gearbox logic. 
+        if (AutomaticGearBox)
+        {
 
-	//		bool forwardIsSlip = false;
-	//		for (int i = FirstDriveWheel; i <= LastDriveWheel; i++)
-	//		{
-	//			if (Wheels[i].CurrentForwardSleep > MaxForwardSlipToBlockChangeGear)
-	//			{
-	//				forwardIsSlip = true;
-	//				break;
-	//			}
-	//		}
+            bool forwardIsSlip = false;
+            for (int i = FirstDriveWheel; i <= LastDriveWheel; i++)
+            {
+                if (Wheels[i].CurrentForwardSleep > MaxForwardSlipToBlockChangeGear)
+                {
+                    forwardIsSlip = true;
+                    break;
+                }
+            }
 
-	//		float prevRatio = 0;
-	//		float newRatio = 0;
+            float prevRatio = 0;
+            float newRatio = 0;
 
-	//		if (!forwardIsSlip && EngineRPM > RpmToNextGear && CurrentGear >= 0 && CurrentGear < (AllGearsRatio.Length - 2))
-	//		{
-	//			prevRatio = AllGearsRatio[CurrentGearIndex];
-	//			CurrentGear++;
-	//			newRatio = AllGearsRatio[CurrentGearIndex];
-	//		}
-	//		else if (EngineRPM < RpmToPrevGear && CurrentGear > 0 && (EngineRPM <= MinRPM || CurrentGear != 1))
-	//		{
-	//			prevRatio = AllGearsRatio[CurrentGearIndex];
-	//			CurrentGear--;
-	//			newRatio = AllGearsRatio[CurrentGearIndex];
-	//		}
+            if (!forwardIsSlip && EngineRPM > RpmToNextGear && CurrentGear >= 0 && CurrentGear < (AllGearsRatio.Length - 2))
+            {
+                prevRatio = AllGearsRatio[CurrentGearIndex];
+                CurrentGear++;
+                newRatio = AllGearsRatio[CurrentGearIndex];
+            }
+            else if (EngineRPM < RpmToPrevGear && CurrentGear > 0 && (EngineRPM <= MinRPM || CurrentGear != 1))
+            {
+                prevRatio = AllGearsRatio[CurrentGearIndex];
+                CurrentGear--;
+                newRatio = AllGearsRatio[CurrentGearIndex];
+            }
 
-	//		if (!Mathf.Approximately(prevRatio, 0) && !Mathf.Approximately(newRatio, 0))
-	//		{
-	//			EngineRPM = Mathf.Lerp(EngineRPM, EngineRPM * (newRatio / prevRatio), RpmEngineToRpmWheelsLerpSpeed * Time.fixedDeltaTime); //EngineRPM * (prevRatio / newRatio);// 
-	//		}
+            if (!Mathf.Approximately(prevRatio, 0) && !Mathf.Approximately(newRatio, 0))
+            {
+                EngineRPM = Mathf.Lerp(EngineRPM, EngineRPM * (newRatio / prevRatio), RpmEngineToRpmWheelsLerpSpeed * Time.fixedDeltaTime); //EngineRPM * (prevRatio / newRatio);// 
+            }
 
-	//		if (CarDirection <= 0 && CurrentAcceleration < 0)
-	//		{
-	//			CurrentGear = -1;
-	//		}
-	//		else if (CurrentGear <= 0 && CarDirection >= 0 && CurrentAcceleration > 0)
-	//		{
-	//			CurrentGear = 1;
-	//		}
-	//		else if (CarDirection == 0 && CurrentAcceleration == 0)
-	//		{
-	//			CurrentGear = 0;
-	//		}
-	//	}
+            if (CarDirection <= 0 && CurrentAcceleration < 0)
+            {
+                CurrentGear = -1;
+            }
+            else if (CurrentGear <= 0 && CarDirection >= 0 && CurrentAcceleration > 0)
+            {
+                CurrentGear = 1;
+            }
+            else if (CarDirection == 0 && CurrentAcceleration == 0)
+            {
+                CurrentGear = 0;
+            }
+        }
 
-	//	if (InCutOff)
-	//	{
-	//		if (CutOffTimer > 0)
-	//		{
-	//			CutOffTimer -= Time.fixedDeltaTime;
-	//			EngineRPM = Mathf.Lerp(EngineRPM, GetInCutOffRPM, RpmEngineToRpmWheelsLerpSpeed * Time.fixedDeltaTime);
-	//		}
-	//		else
-	//		{
-	//			InCutOff = false;
-	//		}
-	//	}
+        if (InCutOff)
+        {
+            if (CutOffTimer > 0)
+            {
+                CutOffTimer -= Time.fixedDeltaTime;
+                EngineRPM = Mathf.Lerp(EngineRPM, GetInCutOffRPM, RpmEngineToRpmWheelsLerpSpeed * Time.fixedDeltaTime);
+            }
+            else
+            {
+                InCutOff = false;
+            }
+        }
 
-	//	if (InCutOff)
-	//		return;
+        if (InCutOff)
+            return;
 
-	//	float rpm = CurrentAcceleration > 0 ? MaxRPM : MinRPM;
-	//	float speed = CurrentAcceleration > 0 ? RpmEngineToRpmWheelsLerpSpeed : RpmEngineToRpmWheelsLerpSpeed * 0.2f;
-	//	EngineRPM = Mathf.Lerp(EngineRPM, rpm, speed * Time.fixedDeltaTime);
-	//	if (EngineRPM >= CutOffRPM)
-	//	{
-	//		InCutOff = true;
-	//		CutOffTimer = CarConfig.CutOffTime;
-	//	}
+        float rpm = CurrentAcceleration > 0 ? MaxRPM : MinRPM;
+        float speed = CurrentAcceleration > 0 ? RpmEngineToRpmWheelsLerpSpeed : RpmEngineToRpmWheelsLerpSpeed * 0.2f;
+        EngineRPM = Mathf.Lerp(EngineRPM, rpm, speed * Time.fixedDeltaTime);
+        if (EngineRPM >= CutOffRPM)
+        {
+            InCutOff = true;
+            CutOffTimer = CarConfig.CutOffTime;
+        }
 
-	//	//Get drive wheel with MinRPM.
-	//	float minRPM = 0;
-	//	for (int i = FirstDriveWheel + 1; i <= LastDriveWheel; i++)
-	//	{
-	//		minRPM += Wheels[i].WheelCollider.rpm;
-	//	}
+        //Get drive wheel with MinRPM.
+        float minRPM = 0;
+        for (int i = FirstDriveWheel + 1; i <= LastDriveWheel; i++)
+        {
+            minRPM += Wheels[i].WheelCollider.rpm;
+        }
 
-	//	minRPM /= LastDriveWheel - FirstDriveWheel + 1;
+        minRPM /= LastDriveWheel - FirstDriveWheel + 1;
 
-	//	if (!InCutOff)
-	//	{
-	//		//Calculate the rpm based on rpm of the wheel and current gear ratio.
-	//		float targetRPM = Mathf.Abs((minRPM + 20) * AllGearsRatio[CurrentGearIndex]);              //+20 for normal work CutOffRPM
-	//		targetRPM = Mathf.Clamp(targetRPM, MinRPM, MaxRPM);
-	//		EngineRPM = Mathf.Lerp(EngineRPM, targetRPM, RpmEngineToRpmWheelsLerpSpeed * Time.fixedDeltaTime);
-	//	}
+        if (!InCutOff)
+        {
+            //Calculate the rpm based on rpm of the wheel and current gear ratio.
+            float targetRPM = Mathf.Abs((minRPM + 20) * AllGearsRatio[CurrentGearIndex]);              //+20 for normal work CutOffRPM
+            targetRPM = Mathf.Clamp(targetRPM, MinRPM, MaxRPM);
+            EngineRPM = Mathf.Lerp(EngineRPM, targetRPM, RpmEngineToRpmWheelsLerpSpeed * Time.fixedDeltaTime);
+        }
 
-	//	if (EngineRPM >= CutOffRPM)
-	//	{
-	//		InCutOff = true;
-	//		CutOffTimer = CarConfig.CutOffTime;
-	//		return;
-	//	}
+        if (EngineRPM >= CutOffRPM)
+        {
+            InCutOff = true;
+            CutOffTimer = CarConfig.CutOffTime;
+            return;
+        }
 
-	//	if (!Mathf.Approximately(CurrentAcceleration, 0))
-	//	{
-	//		//If the direction of the car is the same as Current Acceleration.
-	//		if (CarDirection * CurrentAcceleration >= 0)
-	//		{
-	//			CurrentBrake = 0;
+        if (!Mathf.Approximately(CurrentAcceleration, 0))
+        {
+            //If the direction of the car is the same as Current Acceleration.
+            if (CarDirection * CurrentAcceleration >= 0)
+            {
+                CurrentBrake = 0;
 
-	//			float motorTorqueFromRpm = MotorTorqueFromRpmCurve.Evaluate(EngineRPM * 0.001f);
-	//			var motorTorque = CurrentAcceleration * (motorTorqueFromRpm * (MaxMotorTorque * AllGearsRatio[CurrentGearIndex]));
-	//			if (Mathf.Abs(minRPM) * AllGearsRatio[CurrentGearIndex] > MaxRPM)
-	//			{
-	//				motorTorque = 0;
-	//			}
+                float motorTorqueFromRpm = MotorTorqueFromRpmCurve.Evaluate(EngineRPM * 0.001f);
+                var motorTorque = CurrentAcceleration * (motorTorqueFromRpm * (MaxMotorTorque * AllGearsRatio[CurrentGearIndex]));
+                if (Mathf.Abs(minRPM) * AllGearsRatio[CurrentGearIndex] > MaxRPM)
+                {
+                    motorTorque = 0;
+                }
 
-	//			//If the rpm of the wheel is less than the max rpm engine * current ratio, then apply the current torque for wheel, else not torque for wheel.
-	//			float maxWheelRPM = AllGearsRatio[CurrentGearIndex] * EngineRPM;
-	//			for (int i = FirstDriveWheel; i <= LastDriveWheel; i++)
-	//			{
-	//				if (Wheels[i].WheelCollider.rpm <= maxWheelRPM)
-	//				{
-	//						Wheels[i].WheelCollider.motorTorque = motorTorque;
-	//				}
-	//				else
-	//				{
-	//					Wheels[i].WheelCollider.motorTorque = 0;
-	//				}
-	//			}
-	//		}
-	//		else
-	//		{
-	//			CurrentBrake = MaxBrakeTorque;
-	//		}
-	//	}
-	//	else
-	//	{
-	//		CurrentBrake = 0;
+                //If the rpm of the wheel is less than the max rpm engine * current ratio, then apply the current torque for wheel, else not torque for wheel.
+                float maxWheelRPM = AllGearsRatio[CurrentGearIndex] * EngineRPM;
+                for (int i = FirstDriveWheel; i <= LastDriveWheel; i++)
+                {
+                    if (Wheels[i].WheelCollider.rpm <= maxWheelRPM)
+                    {
+                        Wheels[i].WheelCollider.motorTorque = motorTorque;
+                    }
+                    else
+                    {
+                        Wheels[i].WheelCollider.motorTorque = 0;
+                    }
+                }
+            }
+            else
+            {
+                CurrentBrake = MaxBrakeTorque;
+            }
+        }
+        else
+        {
+            CurrentBrake = 0;
 
-	//		for (int i = FirstDriveWheel; i <= LastDriveWheel; i++)
-	//		{
-	//			Wheels[i].WheelCollider.motorTorque = 0;
-	//		}
-	//	}
+            for (int i = FirstDriveWheel; i <= LastDriveWheel; i++)
+            {
+                Wheels[i].WheelCollider.motorTorque = 0;
+            }
+        }
 
-		
-	//}
 
-	void ManualShift()
+    }
+
+    void ManualShift()
     {
 		if (EngineRPM >= CutOffRPM)
 		{
