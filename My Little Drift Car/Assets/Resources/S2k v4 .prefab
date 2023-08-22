@@ -340,7 +340,7 @@ WheelCollider:
   m_Radius: 0.13
   m_SuspensionSpring:
     spring: 35000
-    damper: 4500
+    damper: 1400
     targetPosition: 0.5
   m_SuspensionDistance: 0.0001
   m_ForceAppPointDistance: 0
@@ -371,20 +371,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3a5417fc46c45045acef6ad30cef510, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  WheelConfig:
-    IsFoldout: 0
-    IsFullConfig: 0
-    Mass: 0
-    Radius: 0
-    WheelDampingRate: 0
-    SuspensionDistance: 0
-    ForceAppPointDistance: 0
-    Center: {x: 0, y: 0, z: 0}
-    Spring: 0
-    Damper: 0
-    TargetPoint: 0
-    ForwardFriction: 0
-    SidewaysFriction: 0
   wheelCollider: {fileID: 451349774739258295}
   rB: {fileID: 451349775921285467}
 --- !u!1 &451349774828749176
@@ -431,7 +417,7 @@ WheelCollider:
   m_Radius: 0.13
   m_SuspensionSpring:
     spring: 35000
-    damper: 4500
+    damper: 1400
     targetPosition: 0.5
   m_SuspensionDistance: 0.0001
   m_ForceAppPointDistance: 0
@@ -462,20 +448,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3a5417fc46c45045acef6ad30cef510, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  WheelConfig:
-    IsFoldout: 0
-    IsFullConfig: 0
-    Mass: 0
-    Radius: 0
-    WheelDampingRate: 0
-    SuspensionDistance: 0
-    ForceAppPointDistance: 0
-    Center: {x: 0, y: 0, z: 0}
-    Spring: 0
-    Damper: 0
-    TargetPoint: 0
-    ForwardFriction: 0
-    SidewaysFriction: 0
   wheelCollider: {fileID: 451349774828749182}
   rB: {fileID: 451349775921285467}
 --- !u!1 &451349775357161519
@@ -522,7 +494,7 @@ WheelCollider:
   m_Radius: 0.13
   m_SuspensionSpring:
     spring: 35000
-    damper: 4500
+    damper: 1400
     targetPosition: 0.5
   m_SuspensionDistance: 0.0001
   m_ForceAppPointDistance: 0
@@ -553,20 +525,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3a5417fc46c45045acef6ad30cef510, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  WheelConfig:
-    IsFoldout: 0
-    IsFullConfig: 0
-    Mass: 0
-    Radius: 0
-    WheelDampingRate: 0
-    SuspensionDistance: 0
-    ForceAppPointDistance: 0
-    Center: {x: 0, y: 0, z: 0}
-    Spring: 0
-    Damper: 0
-    TargetPoint: 0
-    ForwardFriction: 0
-    SidewaysFriction: 0
   wheelCollider: {fileID: 451349775357161517}
   rB: {fileID: 451349775921285467}
 --- !u!1 &451349775921285441
@@ -642,19 +600,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   FrontLeftWheel:
     WheelCollider: {fileID: 451349775357161517}
-    slipping: 0
     WheelView: {fileID: 3010541218563397744}
   FrontRightWheel:
     WheelCollider: {fileID: 451349774828749182}
-    slipping: 0
     WheelView: {fileID: 908825899572882468}
   RearLeftWheel:
     WheelCollider: {fileID: 451349776136491891}
-    slipping: 0
     WheelView: {fileID: 741951103624145032}
   RearRightWheel:
     WheelCollider: {fileID: 451349774739258295}
-    slipping: 0
     WheelView: {fileID: 4350149667274151901}
   COM: {fileID: 7815154675229340151}
   gearText: {fileID: 3543526555201824844}
@@ -749,6 +703,8 @@ MonoBehaviour:
     MaxAngularVelocityHelpAngle: 90
     AngularVelucityInMaxAngle: 0.5
     AngularVelucityInMinAngle: 2
+  Manager: {fileID: 0}
+  gamemanager1: {fileID: 0}
   exit: 0
   InCutOff: 0
 --- !u!114 &451349775921285445
@@ -780,21 +736,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41c88d6ecc46bc24eab2fc8ff740944e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FrontLeftWheel:
-    WheelCollider: {fileID: 451349775357161517}
-    slipping: 0
-    WheelView: {fileID: 3010541218563397744}
-  FrontRightWheel:
-    WheelCollider: {fileID: 451349774828749182}
-    slipping: 0
-    WheelView: {fileID: 908825899572882468}
   RearLeftWheel:
     WheelCollider: {fileID: 451349776136491891}
-    slipping: 0
     WheelView: {fileID: 741951103624145032}
   RearRightWheel:
     WheelCollider: {fileID: 451349774739258295}
-    slipping: 0
     WheelView: {fileID: 4350149667274151901}
   roll: 1000
 --- !u!65 &451349775921285447
@@ -889,7 +835,7 @@ WheelCollider:
   m_Radius: 0.13
   m_SuspensionSpring:
     spring: 35000
-    damper: 4500
+    damper: 1400
     targetPosition: 0.5
   m_SuspensionDistance: 0.0001
   m_ForceAppPointDistance: 0
@@ -920,20 +866,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3a5417fc46c45045acef6ad30cef510, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  WheelConfig:
-    IsFoldout: 0
-    IsFullConfig: 0
-    Mass: 0
-    Radius: 0
-    WheelDampingRate: 0
-    SuspensionDistance: 0
-    ForceAppPointDistance: 0
-    Center: {x: 0, y: 0, z: 0}
-    Spring: 0
-    Damper: 0
-    TargetPoint: 0
-    ForwardFriction: 0
-    SidewaysFriction: 0
   wheelCollider: {fileID: 451349776136491891}
   rB: {fileID: 451349775921285467}
 --- !u!1 &773622394455906967

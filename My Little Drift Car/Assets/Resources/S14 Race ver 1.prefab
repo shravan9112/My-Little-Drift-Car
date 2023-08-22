@@ -2498,24 +2498,24 @@ WheelCollider:
   m_Radius: 0.34
   m_SuspensionSpring:
     spring: 35000
-    damper: 4500
+    damper: 1400
     targetPosition: 0.5
   m_SuspensionDistance: 0.3
   m_ForceAppPointDistance: 0
-  m_Mass: 20
+  m_Mass: 60
   m_WheelDampingRate: 0.25
   m_ForwardFriction:
     m_ExtremumSlip: 0.4
-    m_ExtremumValue: 1
-    m_AsymptoteSlip: 0.8
-    m_AsymptoteValue: 0.5
+    m_ExtremumValue: 1.84
+    m_AsymptoteSlip: 0.6
+    m_AsymptoteValue: 1.655
     m_Stiffness: 1
   m_SidewaysFriction:
-    m_ExtremumSlip: 0.2
-    m_ExtremumValue: 1
-    m_AsymptoteSlip: 0.5
-    m_AsymptoteValue: 0.75
-    m_Stiffness: 2
+    m_ExtremumSlip: 0.4
+    m_ExtremumValue: 1.5
+    m_AsymptoteSlip: 0.6
+    m_AsymptoteValue: 1.2
+    m_Stiffness: 1
   m_Enabled: 1
 --- !u!114 &2916122750431431967
 MonoBehaviour:
@@ -2707,23 +2707,23 @@ WheelCollider:
   m_Radius: 0.34
   m_SuspensionSpring:
     spring: 35000
-    damper: 4500
+    damper: 1400
     targetPosition: 0.5
   m_SuspensionDistance: 0.3
   m_ForceAppPointDistance: 0
-  m_Mass: 20
+  m_Mass: 60
   m_WheelDampingRate: 0.25
   m_ForwardFriction:
     m_ExtremumSlip: 0.4
-    m_ExtremumValue: 1
-    m_AsymptoteSlip: 0.8
-    m_AsymptoteValue: 0.5
+    m_ExtremumValue: 2.6
+    m_AsymptoteSlip: 0.6
+    m_AsymptoteValue: 2.3
     m_Stiffness: 1
   m_SidewaysFriction:
-    m_ExtremumSlip: 0.2
-    m_ExtremumValue: 1
-    m_AsymptoteSlip: 0.5
-    m_AsymptoteValue: 0.75
+    m_ExtremumSlip: 0.4
+    m_ExtremumValue: 2.5
+    m_AsymptoteSlip: 0.6
+    m_AsymptoteValue: 2.2
     m_Stiffness: 1
   m_Enabled: 1
 --- !u!114 &2916122750431431960
@@ -2784,23 +2784,23 @@ WheelCollider:
   m_Radius: 0.34
   m_SuspensionSpring:
     spring: 35000
-    damper: 4500
+    damper: 1400
     targetPosition: 0.5
   m_SuspensionDistance: 0.3
   m_ForceAppPointDistance: 0
-  m_Mass: 20
+  m_Mass: 60
   m_WheelDampingRate: 0.25
   m_ForwardFriction:
     m_ExtremumSlip: 0.4
-    m_ExtremumValue: 1
-    m_AsymptoteSlip: 0.8
-    m_AsymptoteValue: 0.5
+    m_ExtremumValue: 2.6
+    m_AsymptoteSlip: 0.6
+    m_AsymptoteValue: 2.3
     m_Stiffness: 1
   m_SidewaysFriction:
-    m_ExtremumSlip: 0.2
-    m_ExtremumValue: 1
-    m_AsymptoteSlip: 0.5
-    m_AsymptoteValue: 0.75
+    m_ExtremumSlip: 0.4
+    m_ExtremumValue: 2.5
+    m_AsymptoteSlip: 0.6
+    m_AsymptoteValue: 2.2
     m_Stiffness: 1
   m_Enabled: 1
 --- !u!114 &2916122750616556504
@@ -2896,24 +2896,24 @@ WheelCollider:
   m_Radius: 0.34
   m_SuspensionSpring:
     spring: 35000
-    damper: 4500
+    damper: 1400
     targetPosition: 0.5
   m_SuspensionDistance: 0.3
   m_ForceAppPointDistance: 0
-  m_Mass: 20
+  m_Mass: 60
   m_WheelDampingRate: 0.25
   m_ForwardFriction:
     m_ExtremumSlip: 0.4
-    m_ExtremumValue: 1
-    m_AsymptoteSlip: 0.8
-    m_AsymptoteValue: 0.5
+    m_ExtremumValue: 1.84
+    m_AsymptoteSlip: 0.6
+    m_AsymptoteValue: 1.655
     m_Stiffness: 1
   m_SidewaysFriction:
-    m_ExtremumSlip: 0.2
-    m_ExtremumValue: 1
-    m_AsymptoteSlip: 0.5
-    m_AsymptoteValue: 0.75
-    m_Stiffness: 2
+    m_ExtremumSlip: 0.4
+    m_ExtremumValue: 1.5
+    m_AsymptoteSlip: 0.6
+    m_AsymptoteValue: 1.2
+    m_Stiffness: 1
   m_Enabled: 1
 --- !u!114 &2916122750431431966
 MonoBehaviour:
@@ -3265,7 +3265,6 @@ GameObject:
   - component: {fileID: 7439387423609894463}
   - component: {fileID: 6968399097880436569}
   - component: {fileID: 7815385681499712644}
-  - component: {fileID: 7815385681499712647}
   - component: {fileID: 2916122749815852156}
   - component: {fileID: 2916122749815852147}
   - component: {fileID: 1879394522538553683}
@@ -3322,75 +3321,13 @@ Rigidbody:
   m_GameObject: {fileID: 7815385681499712645}
   serializedVersion: 2
   m_Mass: 1400
-  m_Drag: 0
+  m_Drag: 0.05
   m_AngularDrag: 0.05
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &7815385681499712647
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7815385681499712645}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c14aca99a77404a4caa8b126d542ce41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  frontRight: {fileID: 6968399098913515373}
-  frontLeft: {fileID: 6968399097069840425}
-  rearRight: {fileID: 6968399097865503774}
-  rearLeft: {fileID: 6968399097868407363}
-  frontRightTransfrom: {fileID: 5527457909729680339}
-  frontLeftTransfrom: {fileID: 521535304282782575}
-  rearRightTransfrom: {fileID: 6440484980368691541}
-  rearLeftTransfrom: {fileID: 3065080078355283401}
-  speedText: {fileID: 0}
-  gearText: {fileID: 0}
-  smoke: {fileID: 6147903259295162071, guid: 1c6029daa8a350542bef59bd8529ea6f, type: 3}
-  power: 400
-  brakingForce: 300
-  slipAllowance: 0.5
-  currentGear: 0
-  gasInput: 0
-  brakeInput: 0
-  handbrakePressed: 0
-  accelerating: 0
-  braking: 0
-  coasting: 0
-  reversing: 0
-  speed: 0
-  currentpower: 0
-  slipAngle: 0
-  turnInput: 0
-  steering:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0.09304315
-      value: 69.8358
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 15.376907
-      value: 16.99016
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
 --- !u!114 &2916122749815852156
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3421,7 +3358,7 @@ MonoBehaviour:
   rpmText: {fileID: 1256617397511157066}
   slider: {fileID: 3677400036606837093}
   speed: 0
-  AWD: 1
+  AWD: 0
   CarConfig:
     MaxSteerAngle: 45
     AutomaticGearBox: 1
@@ -3494,20 +3431,23 @@ MonoBehaviour:
     - 1.312
     - 1
     MainRatio: 3.56
-    ReversGearRatio: 2
+    ReversGearRatio: 4
     MaxBrakeTorque: 2000
     EnableSteerAngleMultiplier: 1
     MinSteerAngleMultiplier: 0.05
     MaxSteerAngleMultiplier: 1
     MaxSpeedForMinAngleMultiplier: 250
-    SteerAngleChangeSpeed: 240
+    SteerAngleChangeSpeed: 60
     MinSpeedForSteerHelp: 20
-    HelpSteerPower: 0.717
-    OppositeAngularVelocityHelpPower: 0.2
-    PositiveAngularVelocityHelpPower: -0.1
-    MaxAngularVelocityHelpAngle: 90
+    HelpSteerPower: 0.2
+    OppositeAngularVelocityHelpPower: 0.05
+    PositiveAngularVelocityHelpPower: 0
+    MaxAngularVelocityHelpAngle: 45
     AngularVelucityInMaxAngle: 0.5
     AngularVelucityInMinAngle: 2
+  Manager: {fileID: 0}
+  gamemanager1: {fileID: 0}
+  exit: 0
   InCutOff: 0
 --- !u!114 &2916122749815852147
 MonoBehaviour:
@@ -3538,12 +3478,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41c88d6ecc46bc24eab2fc8ff740944e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FrontLeftWheel:
-    WheelCollider: {fileID: 6968399097069840425}
-    WheelView: {fileID: 0}
-  FrontRightWheel:
-    WheelCollider: {fileID: 6968399098913515373}
-    WheelView: {fileID: 0}
   RearLeftWheel:
     WheelCollider: {fileID: 6968399097868407363}
     WheelView: {fileID: 0}
