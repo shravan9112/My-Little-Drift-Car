@@ -35,7 +35,7 @@ public class CarController : MonoBehaviour
 
 	float MaxMotorTorque;
 	float MaxSteerAngle { get { return CarConfig.MaxSteerAngle; } }
-	//DriveType DriveType { get { return CarConfig.DriveType; } }
+
 	private bool _automaticGearBox;
 
 	bool AutomaticGearBox
@@ -56,8 +56,6 @@ public class CarController : MonoBehaviour
 	float MainRatio { get { return CarConfig.MainRatio; } }
 	float ReversGearRatio { get { return CarConfig.ReversGearRatio; } }
 	float MaxBrakeTorque { get { return CarConfig.MaxBrakeTorque; } }
-
-
 	#endregion
 
 	#region Properties of drif Settings
@@ -80,7 +78,7 @@ public class CarController : MonoBehaviour
 	public CarConfig GetCarConfig { get { return CarConfig; } }
 	public Wheel[] Wheels { get; private set; }
 
-	float[] AllGearsRatio;                                                           //All gears (Reverce, neutral and all forward).
+	float[] AllGearsRatio;                                                           
 
 	Rigidbody rB;
 	public Rigidbody RB
@@ -95,9 +93,9 @@ public class CarController : MonoBehaviour
 		}
 	}
 
-	//public float CurrentMaxSlip { get; private set; }                       //Max slip of all wheels.
-	//public int CurrentMaxSlipWheelIndex { get; private set; }               //Max slip wheel index.
-	public float CurrentSpeed { get; private set; }                         //Speed, magnitude of velocity.
+	public float CurrentMaxSlip { get; private set; }
+	public int CurrentMaxSlipWheelIndex { get; private set; }
+	public float CurrentSpeed { get; private set; }                      
 	public float SpeedInHour { get { return CurrentSpeed * 3.6f; } }
 	public int CarDirection { get { return CurrentSpeed < 1 ? 0 : (VelocityAngle < 90 && VelocityAngle > -90 ? 1 : -1); } }
 
@@ -225,6 +223,8 @@ public class CarController : MonoBehaviour
 
 	private void FixedUpdate()
 	{
+		CurrentMaxSlip = Wheels[0].CurrentMaxSlip;
+		CurrentMaxSlipWheelIndex = 0;
 
 		CurrentSpeed = RB.velocity.magnitude;
 
@@ -235,11 +235,6 @@ public class CarController : MonoBehaviour
 		}
 		else
 			ManualShift();
-
-
-		//Find max slip and update braking ground logic.
-		//CurrentMaxSlip = Wheels[0].CurrentMaxSlip;
-		//CurrentMaxSlipWheelIndex = 0;
 
 		if (InHandBrake)
 		{
@@ -256,14 +251,14 @@ public class CarController : MonoBehaviour
 				Wheels[i].WheelCollider.brakeTorque = CurrentBrake;
 			}
 
-			//Wheels[i].FixedUpdate();
+            Wheels[i].FixedUpdate();
 
-			//if (CurrentMaxSlip < Wheels[i].CurrentMaxSlip)
-			//{
-			//	CurrentMaxSlip = Wheels[i].CurrentMaxSlip;
-			//	CurrentMaxSlipWheelIndex = i;
-			//}
-		}
+            if (CurrentMaxSlip < Wheels[i].CurrentMaxSlip)
+            {
+                CurrentMaxSlip = Wheels[i].CurrentMaxSlip;
+                CurrentMaxSlipWheelIndex = i;
+            }
+        }
 	}
 
 	public int CurrentGear { get; private set; }
@@ -340,19 +335,16 @@ public class CarController : MonoBehaviour
             }
         }
 
-        if (InCutOff)
-            return;
-
         float rpm = CurrentAcceleration > 0 ? MaxRPM : MinRPM;
         float speed = CurrentAcceleration > 0 ? RpmEngineToRpmWheelsLerpSpeed : RpmEngineToRpmWheelsLerpSpeed * 0.2f;
         EngineRPM = Mathf.Lerp(EngineRPM, rpm, speed * Time.fixedDeltaTime);
+
         if (EngineRPM >= CutOffRPM)
         {
             InCutOff = true;
             CutOffTimer = CarConfig.CutOffTime;
         }
 
-        //Get drive wheel with MinRPM.
         float minRPM = 0;
         for (int i = FirstDriveWheel + 1; i <= LastDriveWheel; i++)
         {
@@ -363,8 +355,7 @@ public class CarController : MonoBehaviour
 
         if (!InCutOff)
         {
-            //Calculate the rpm based on rpm of the wheel and current gear ratio.
-            float targetRPM = Mathf.Abs((minRPM + 20) * AllGearsRatio[CurrentGearIndex]);              //+20 for normal work CutOffRPM
+            float targetRPM = Mathf.Abs((minRPM + 20) * AllGearsRatio[CurrentGearIndex]);              
             targetRPM = Mathf.Clamp(targetRPM, MinRPM, MaxRPM);
             EngineRPM = Mathf.Lerp(EngineRPM, targetRPM, RpmEngineToRpmWheelsLerpSpeed * Time.fixedDeltaTime);
         }
@@ -407,7 +398,11 @@ public class CarController : MonoBehaviour
             else
             {
                 CurrentBrake = MaxBrakeTorque;
-            }
+				Wheels[0].WheelCollider.brakeTorque = CurrentBrake * 0.3f;
+				Wheels[1].WheelCollider.brakeTorque = CurrentBrake * 0.3f;
+				Wheels[1].WheelCollider.brakeTorque = CurrentBrake * 0.2f;
+				Wheels[3].WheelCollider.brakeTorque = CurrentBrake * 0.2f;
+			}
         }
         else
         {
@@ -418,8 +413,6 @@ public class CarController : MonoBehaviour
                 Wheels[i].WheelCollider.motorTorque = 0;
             }
         }
-
-
     }
 
     void ManualShift()
@@ -434,14 +427,14 @@ public class CarController : MonoBehaviour
 				InCutOff = false;
 		}
 
-		float prevRatio = 0;
-		float newRatio = 0;
-		if (!Mathf.Approximately(prevRatio, 0) && !Mathf.Approximately(newRatio, 0))
-		{
-			EngineRPM = Mathf.Lerp(EngineRPM, EngineRPM * (newRatio / prevRatio), RpmEngineToRpmWheelsLerpSpeed * Time.fixedDeltaTime); //EngineRPM * (prevRatio / newRatio);// 
-		}
+        //float prevRatio = 0;
+        //float newRatio = 0;
+        //if (!Mathf.Approximately(prevRatio, 0) && !Mathf.Approximately(newRatio, 0))
+        //{
+        //    EngineRPM = Mathf.Lerp(EngineRPM, EngineRPM * (newRatio / prevRatio), RpmEngineToRpmWheelsLerpSpeed * Time.fixedDeltaTime); //EngineRPM * (prevRatio / newRatio);// 
+        //}
 
-		float rpm = CurrentAcceleration > 0 ? MaxRPM : MinRPM;
+        float rpm = CurrentAcceleration > 0 ? MaxRPM : MinRPM;
 		float speed = CurrentAcceleration > 0 ? RpmEngineToRpmWheelsLerpSpeed : RpmEngineToRpmWheelsLerpSpeed * 0.2f;
 		EngineRPM = Mathf.Lerp(EngineRPM, rpm, speed * Time.fixedDeltaTime);
 		float minRPM = 0;
@@ -452,14 +445,14 @@ public class CarController : MonoBehaviour
 
 		minRPM /= LastDriveWheel - FirstDriveWheel + 1;
 
-		if(!InCutOff)
+        if (!InCutOff)
         {
-			float targetRPM = Mathf.Abs((minRPM + 20) * AllGearsRatio[CurrentGearIndex]);              //+20 for normal work CutOffRPM
-			targetRPM = Mathf.Clamp(targetRPM, MinRPM, MaxRPM);
-			EngineRPM = Mathf.Lerp(EngineRPM, targetRPM, RpmEngineToRpmWheelsLerpSpeed * Time.fixedDeltaTime);
-		}
-		
-		if (!Mathf.Approximately(CurrentAcceleration, 0))
+            float targetRPM = Mathf.Abs((minRPM + 20) * AllGearsRatio[CurrentGearIndex]);              //+20 for normal work CutOffRPM
+            targetRPM = Mathf.Clamp(targetRPM, MinRPM, MaxRPM);
+            EngineRPM = Mathf.Lerp(EngineRPM, targetRPM, RpmEngineToRpmWheelsLerpSpeed * Time.fixedDeltaTime);
+        }
+
+        if (!Mathf.Approximately(CurrentAcceleration, 0))
 		{
 			//If the direction of the car is the same as Current Acceleration.
 			if (CarDirection * CurrentAcceleration >= 0)
@@ -537,36 +530,30 @@ public class CarController : MonoBehaviour
 
 		if (needHelp)
 		{
-			//Wheel turning helper.
 			targetAngle = Mathf.Clamp(VelocityAngle * HelpSteerPower, -MaxSteerAngle, MaxSteerAngle);
 		}
 
-		//Wheel turn limitation.
 		targetAngle = Mathf.Clamp(targetAngle + CurrentSteerAngle, -(MaxSteerAngle + 10), MaxSteerAngle + 10);
 
-		//Front wheel turn.
 		Wheels[0].WheelCollider.steerAngle = targetAngle;
 		Wheels[1].WheelCollider.steerAngle = targetAngle;
 
         if (needHelp)
         {
-            //Angular velocity helper.
             var absAngle = Mathf.Abs(VelocityAngle);
 
-            //Get current procent help angle.
             float currentAngularProcent = absAngle / MaxAngularVelocityHelpAngle;
 
             var currAngle = RB.angularVelocity;
 
             if (VelocityAngle * CurrentSteerAngle > 0)
             {
-                //Turn to the side opposite to the angle. To change the angular velocity.
                 var angularVelocityMagnitudeHelp = OppositeAngularVelocityHelpPower * CurrentSteerAngle * Time.fixedDeltaTime;
                 currAngle.y += angularVelocityMagnitudeHelp * currentAngularProcent;
             }
             else if (!Mathf.Approximately(CurrentSteerAngle, 0))
             {
-                //Turn to the side positive to the angle. To change the angular velocity.
+
                 var angularVelocityMagnitudeHelp = PositiveAngularVelocityHelpPower * CurrentSteerAngle * Time.fixedDeltaTime;
                 currAngle.y += angularVelocityMagnitudeHelp * (1 - currentAngularProcent);
             }
@@ -580,6 +567,8 @@ public class CarController : MonoBehaviour
 
 	private float GetSpeedRotation()
 	{
+
+		//Function used to get the angle required for the needle of speedometer
 		float totalAngleSize = zeroSpeedAngle - maxSpeedAngle;
 		float speedNormalized = speed / speedMax;
 		return zeroSpeedAngle - speedNormalized * totalAngleSize;
@@ -587,6 +576,7 @@ public class CarController : MonoBehaviour
 
 	private float GetRpmRotation()
 	{
+		//Function used to get the angle required for the needle of tachometer
 		float totalAngleSize = zeroSpeedAngle - maxSpeedAngle;
 		float rpmNormalized = EngineRPM / rpmMax;
 		return zeroSpeedAngle - rpmNormalized * totalAngleSize;
@@ -600,42 +590,40 @@ public class CarConfig
 	[Header("Steer Settings")]
 	public float MaxSteerAngle = 25;
 
-	[Header("Engine and power settings")]
-	//public DriveType DriveType = DriveType.RWD;             //Drive type AWD, FWD, RWD. With the current parameters of the car only RWD works well. TODO Add rally and offroad regime.
+	[Header("Engine and power settings")]             
 	public bool AutomaticGearBox = true;
-	public float MaxMotorTorque = 150;                      //Max motor torque engine (Without GearBox multiplier).
-	public AnimationCurve MotorTorqueFromRpmCurve;          //Curve motor torque (Y(0-1) motor torque, X(0-7) motor RPM).
+	public float MaxMotorTorque = 150;                      
+	public AnimationCurve MotorTorqueFromRpmCurve;          
 	public float MaxRPM = 7000;
 	public float MinRPM = 700;
-	public float CutOffRPM = 6800;                          //The RPM at which the cutoff is triggered.
+	public float CutOffRPM = 6800;                          
 	public float CutOffOffsetRPM = 500;
 	public float CutOffTime = 0.1f;
-	[Range(0, 1)] public float ProbabilityBackfire = 0.2f;   //Probability backfire: 0 - off backfire, 1 always on backfire.
-	public float RpmToNextGear = 6500;                      //The speed at which there is an increase in gearbox.
-	public float RpmToPrevGear = 4500;                      //The speed at which there is an decrease in gearbox.
-	public float MaxForwardSlipToBlockChangeGear = 0.5f;    //Maximum rear wheel slip for shifting gearbox.
-	public float RpmEngineToRpmWheelsLerpSpeed = 15;        //Lerp Speed change of RPM.
-	public float[] GearsRatio;                              //Forward gears ratio.
+	public float RpmToNextGear = 6500;                      
+	public float RpmToPrevGear = 4500;                      
+	public float MaxForwardSlipToBlockChangeGear = 0.5f;    
+	public float RpmEngineToRpmWheelsLerpSpeed = 15;        
+	public float[] GearsRatio;                              
 	public float MainRatio;
-	public float ReversGearRatio;                           //Reverse gear ratio.
+	public float ReversGearRatio;                           
 
 	[Header("Braking settings")]
 	public float MaxBrakeTorque = 1000;
 
-	[Header("Helper settings")]                             //This settings block in the full version is stored in the regime settings.
+	[Header("Helper settings")]                             
 
 	public bool EnableSteerAngleMultiplier = true;
-	public float MinSteerAngleMultiplier = 0.05f;           //Min steer angle multiplayer to limit understeer at high speeds.
-	public float MaxSteerAngleMultiplier = 1f;          //Max steer angle multiplayer to limit understeer at high speeds.
-	public float MaxSpeedForMinAngleMultiplier = 250;       //The maximum speed at which there will be a minimum steering angle multiplier.
+	public float MinSteerAngleMultiplier = 0.05f;           
+	public float MaxSteerAngleMultiplier = 1f;          
+	public float MaxSpeedForMinAngleMultiplier = 250;       
 	[Space(10)]
 
-	public float SteerAngleChangeSpeed;                     //Wheel turn speed.
-	public float MinSpeedForSteerHelp;                      //Min speed at which helpers are enabled.
-	[Range(0f, 1f)] public float HelpSteerPower;            //The power of turning the wheels in the direction of the drift.
-	public float OppositeAngularVelocityHelpPower = 0.1f;   //The power of the helper to turn the rigidbody in the direction of the control turn.
-	public float PositiveAngularVelocityHelpPower = 0.1f;   //The power of the helper to positive turn the rigidbody in the direction of the control turn.
-	public float MaxAngularVelocityHelpAngle;               //The angle at which the assistant works 100%.
-	public float AngularVelucityInMaxAngle;                 //Min angular velucity, reached at max drift angles.
-	public float AngularVelucityInMinAngle;                 //Max angular velucity, reached at min drift angles.
+	public float SteerAngleChangeSpeed;                     
+	public float MinSpeedForSteerHelp;                      
+	[Range(0f, 1f)] public float HelpSteerPower;           
+	public float OppositeAngularVelocityHelpPower = 0.1f;   
+	public float PositiveAngularVelocityHelpPower = 0.1f;   
+	public float MaxAngularVelocityHelpAngle;               
+	public float AngularVelucityInMaxAngle;                 
+	public float AngularVelucityInMinAngle;                 
 }
