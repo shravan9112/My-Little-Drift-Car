@@ -70,8 +70,10 @@
     <Compile Include="Assets\Scripts\Test\CarWheelCollider.cs" />
     <Compile Include="Assets\Scripts\UI\LookAt.cs" />
     <Compile Include="Assets\Scripts\CreateAndJoinRoom.cs" />
-    <Compile Include="Assets\Scripts\Photon Scripts\ConnectToServer.cs" />
     <Compile Include="Assets\Scripts\Test\SoundController.cs" />
+    <Compile Include="Assets\Scripts\Photon Scripts\ConnectToServer.cs" />
+    <Compile Include="Assets\Scripts\Test\EffectsController.cs" />
+    <Compile Include="Assets\Scripts\Utilities\Singleton.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

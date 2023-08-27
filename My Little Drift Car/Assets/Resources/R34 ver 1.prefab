@@ -2422,15 +2422,19 @@ MonoBehaviour:
   FrontLeftWheel:
     WheelCollider: {fileID: 9103446413950205167}
     WheelView: {fileID: 8623820983637687777}
+    SlipToGenerateParticle: 0.4
   FrontRightWheel:
     WheelCollider: {fileID: 9103446415253270507}
     WheelView: {fileID: 8565053470325270829}
+    SlipToGenerateParticle: 0.4
   RearLeftWheel:
     WheelCollider: {fileID: 9103446415423442807}
     WheelView: {fileID: 9103446415094156093}
+    SlipToGenerateParticle: 0.4
   RearRightWheel:
     WheelCollider: {fileID: 9103446414109251496}
     WheelView: {fileID: 9103446415835279681}
+    SlipToGenerateParticle: 0.4
   COM: {fileID: 9103446414980749314}
   gearText: {fileID: 5275925685140287662}
   speedText: {fileID: 3125620142927635747}
@@ -2550,9 +2554,11 @@ MonoBehaviour:
   RearLeftWheel:
     WheelCollider: {fileID: 9103446415423442807}
     WheelView: {fileID: 9103446415094156093}
+    SlipToGenerateParticle: 0
   RearRightWheel:
     WheelCollider: {fileID: 9103446414109251496}
     WheelView: {fileID: 9103446415835279681}
+    SlipToGenerateParticle: 0
   roll: 2500
 --- !u!114 &2282072861422971585
 MonoBehaviour:
