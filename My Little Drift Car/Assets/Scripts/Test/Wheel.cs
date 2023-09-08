@@ -30,7 +30,7 @@ public struct Wheel
 	public void FixedUpdate()
 	{
 
-		if (WheelCollider.GetGroundHit(out Hit))
+		if (WheelCollider.GetGroundHit(out Hit))   //Calculating tire slipping the most and it's slip
 		{
             var prevForwar = CurrentForwardSleep;
             var prevSide = CurrentSidewaysSleep;
@@ -45,7 +45,7 @@ public struct Wheel
 		}
 	}
 
-	public void UpdateTransform()
+	public void UpdateTransform()  //Sync wheel's transform to that of the wheel collider
 	{
 		Vector3 pos;
 		Quaternion quat;

@@ -56,6 +56,9 @@ public class CarController : MonoBehaviour
 	float MainRatio { get { return CarConfig.MainRatio; } }
 	float ReversGearRatio { get { return CarConfig.ReversGearRatio; } }
 	float MaxBrakeTorque { get { return CarConfig.MaxBrakeTorque; } }
+
+	private float FrontBrakeRatio = 60f;
+	private float RearBrakeRatio = 40f;
 	#endregion
 
 	#region Properties of drif Settings
@@ -116,9 +119,9 @@ public class CarController : MonoBehaviour
 
 	private void Awake()
 	{
-		RB.centerOfMass = COM.localPosition;
+		RB.centerOfMass = COM.localPosition;  //Set cetnre of mass
 
-		needleTransform = GameObject.Find("Needle").transform;
+		needleTransform = GameObject.Find("Needle").transform;	
 		rpmTransform = GameObject.Find("RpmNeedle").transform;
 		speedMax = 100f;
 		rpmMax = 7000f;
@@ -156,7 +159,7 @@ public class CarController : MonoBehaviour
     {
 		Manager = GameObject.Find("GameManager");
 	}
-    public void UpdateControls(float horizontal, float vertical, bool handBrake)
+    public void UpdateControls(float horizontal, float vertical, bool handBrake)  //Update user's input
 	{
 		float targetSteerAngle = horizontal * MaxSteerAngle;
 		horizontalinput = horizontal;
@@ -183,7 +186,7 @@ public class CarController : MonoBehaviour
 		}
 			
 
-		if (AWD)
+		if (AWD)  //AWD drivetrain or RWD
 		{
 			FirstDriveWheel = 0;
 			LastDriveWheel = 3;
@@ -199,7 +202,7 @@ public class CarController : MonoBehaviour
 			Wheels[i].UpdateTransform();
 		}
 		gearText.text = CurrentGear.ToString();
-		needleTransform.eulerAngles = new Vector3(0, 0, GetSpeedRotation());
+		needleTransform.eulerAngles = new Vector3(0, 0, GetSpeedRotation());  //Update speedometer and tachometer
 		rpmTransform.eulerAngles = new Vector3(0, 0, GetRpmRotation());
 		slider.value = horizontalinput;
 		if (CurrentSpeed > 0.1)
@@ -213,7 +216,7 @@ public class CarController : MonoBehaviour
 		if (Manager.GetComponent<Gamemanager>().maxspeed < speed)
 			Manager.GetComponent<Gamemanager>().maxspeed = speed;
 
-		if (Input.GetKeyDown(KeyCode.E))
+		if (Input.GetKeyDown(KeyCode.E))  //Manual shift
 			Shiftup();
 		if (Input.GetKeyDown(KeyCode.Q))
 			ShiftDown();
@@ -236,7 +239,7 @@ public class CarController : MonoBehaviour
 		else
 			ManualShift();
 
-		if (InHandBrake)
+		if (InHandBrake)   //Handbrake mechanics
 		{
 			RearLeftWheel.WheelCollider.brakeTorque = MaxBrakeTorque;
 			RearRightWheel.WheelCollider.brakeTorque = MaxBrakeTorque;
@@ -273,7 +276,7 @@ public class CarController : MonoBehaviour
 
     void UpdateRpmAndTorqueLogic()
     {
-        //Automatic gearbox logic. 
+        //Automatic gearbox 
         if (AutomaticGearBox)
         {
 
@@ -398,10 +401,10 @@ public class CarController : MonoBehaviour
             else
             {
                 CurrentBrake = MaxBrakeTorque;
-				Wheels[0].WheelCollider.brakeTorque = CurrentBrake * 0.3f;
-				Wheels[1].WheelCollider.brakeTorque = CurrentBrake * 0.3f;
-				Wheels[1].WheelCollider.brakeTorque = CurrentBrake * 0.2f;
-				Wheels[3].WheelCollider.brakeTorque = CurrentBrake * 0.2f;
+				Wheels[0].WheelCollider.brakeTorque = CurrentBrake * (FrontBrakeRatio/2);
+				Wheels[1].WheelCollider.brakeTorque = CurrentBrake * (FrontBrakeRatio / 2);
+				Wheels[1].WheelCollider.brakeTorque = CurrentBrake * (RearBrakeRatio / 2);
+				Wheels[3].WheelCollider.brakeTorque = CurrentBrake * (RearBrakeRatio / 2);
 			}
         }
         else
@@ -522,7 +525,7 @@ public class CarController : MonoBehaviour
 		}
 	}
 
-	void UpdateSteerAngleLogic()
+	void UpdateSteerAngleLogic()  //All steering related mechanics with helpers as well
 	{
 		var needHelp = SpeedInHour > MinSpeedForSteerHelp && CarDirection > 0;
 		float targetAngle = 0;
@@ -558,7 +561,6 @@ public class CarController : MonoBehaviour
                 currAngle.y += angularVelocityMagnitudeHelp * (1 - currentAngularProcent);
             }
 
-            //Clamp and apply of angular velocity.
             var maxMagnitude = ((AngularVelucityInMaxAngle - AngularVelucityInMinAngle) * currentAngularProcent) + AngularVelucityInMinAngle;
             currAngle.y = Mathf.Clamp(currAngle.y, -maxMagnitude, maxMagnitude);
             RB.angularVelocity = currAngle;

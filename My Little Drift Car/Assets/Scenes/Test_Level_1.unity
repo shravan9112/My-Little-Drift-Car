@@ -152,11 +152,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac789690f1243c14cb20998c569bdc96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  s14drift: {fileID: 0}
-  s2kdrift: {fileID: 0}
+  first: {fileID: 0}
+  second: {fileID: 0}
   ui: {fileID: 0}
+  hints: {fileID: 0}
+  panel: {fileID: 0}
+  credits: {fileID: 0}
+  cars: []
+  showcars: []
+  time: 0
+  maxspeed: 0
   pos: {x: 330.2, y: 21.48, z: 65}
-  photon: 0
+  photon: 1
+  exit: 0
+  runtimer: 0
+  timeText: {fileID: 0}
 --- !u!4 &69759723
 Transform:
   m_ObjectHideFlags: 0
